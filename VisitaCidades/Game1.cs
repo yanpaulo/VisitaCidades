@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Linq;
+using VisitaCidades.Model;
 
 namespace VisitaCidades
 {
@@ -11,11 +14,18 @@ namespace VisitaCidades
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+        private Problema problema = new Problema();
+        private Solucao solucao;
+        private Texture2D bg;
+        private Texture2D color;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Window.AllowUserResizing = true;
+
+            solucao = problema.SolucaoAleatoria();
         }
 
         /// <summary>
@@ -41,6 +51,12 @@ namespace VisitaCidades
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            bg = new Texture2D(GraphicsDevice, problema.Mapa.Tamanho.Width, problema.Mapa.Tamanho.Height);
+            color = new Texture2D(GraphicsDevice, 10, 10);
+
+            bg.SetData(Enumerable.Range(0, bg.Width * bg.Height).Select(n => Color.White).ToArray());
+            color.SetData(Enumerable.Range(0, color.Width * color.Height).Select(n => Color.White).ToArray());
         }
 
         /// <summary>
@@ -74,7 +90,32 @@ namespace VisitaCidades
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            
+            spriteBatch.Draw(bg, problema.Mapa.Tamanho, Color.White);
 
+
+            foreach (var local in problema.Mapa.Locais)
+            {
+                spriteBatch.Draw(color, local.Posicao, Color.Blue);
+            }
+
+            foreach (var rota in solucao.Rotas)
+            {
+                for (int i = 0; i < rota.Locais.Count - 1; i++)
+                {
+                    var atual = rota.Locais[i];
+                    var proximo = rota.Locais[i + 1];
+
+                    var direcao = proximo.Posicao - atual.Posicao;
+                    var distancia = Vector2.Distance(atual.Posicao, proximo.Posicao);
+                    var angulo = Math.Atan2(direcao.Y, direcao.X);
+
+                    spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, (float)angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                }
+            }
+
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
