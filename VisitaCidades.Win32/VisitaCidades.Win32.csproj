@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VisitaCidades\VisitaCidades.csproj">
-      <Project>{e13d2038-4275-46d5-af55-0a6fa8dc7534}</Project>
+      <Project>{47afc39e-b75c-4abb-b2f3-169f7ca37ece}</Project>
       <Name>VisitaCidades</Name>
     </ProjectReference>
   </ItemGroup>
