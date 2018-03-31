@@ -9,7 +9,7 @@ using static VisitaCidades.Utils;
 
 namespace VisitaCidades.Model
 {
-    class Problema
+    public class Problema
     {
         public Mapa Mapa { get; set; } = new Mapa();
 
@@ -40,6 +40,40 @@ namespace VisitaCidades.Model
                 }
             }
             return new Solucao { Rotas = rotas };
+        }
+
+        public Solucao Solucao(IList<int> indexes)
+        {
+            var rotas = new List<Rota>();
+            var locaisCount = 0;
+            float custo = 0;
+
+            foreach (var viajante in Viajantes)
+            {
+                var rota = new Rota
+                {
+                    Viajante = viajante,
+                    Locais = indexes.Skip(locaisCount).Take(viajante.QuantidadeLocais).Select(index => Mapa.Locais[index]).ToList()
+                };
+
+                for (int i = 0; i < rota.Locais.Count - 1; i++)
+                {
+                    var atual = rota.Locais[i];
+                    var proximo = rota.Locais[i + 1];
+
+                    custo += Vector2.Distance(atual.Posicao, proximo.Posicao);
+                }
+
+                locaisCount += viajante.QuantidadeLocais;
+                rotas.Add(rota);
+            }
+
+            return new Solucao
+            {
+                Custo = custo,
+                Rotas = rotas
+            };
+
         }
 
     }

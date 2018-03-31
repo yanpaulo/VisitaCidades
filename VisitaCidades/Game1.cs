@@ -1,8 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeneticSharp.Domain;
+using GeneticSharp.Domain.Crossovers;
+using GeneticSharp.Domain.Mutations;
+using GeneticSharp.Domain.Populations;
+using GeneticSharp.Domain.Selections;
+using GeneticSharp.Domain.Terminations;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using VisitaCidades.Model;
 
 namespace VisitaCidades
@@ -18,6 +26,7 @@ namespace VisitaCidades
         private Solucao solucao;
         private Texture2D bg;
         private Texture2D color;
+        private GeneticAlgorithm ga;
 
         public Game1()
         {
@@ -57,6 +66,35 @@ namespace VisitaCidades
 
             bg.SetData(Enumerable.Range(0, bg.Width * bg.Height).Select(n => Color.White).ToArray());
             color.SetData(Enumerable.Range(0, color.Width * color.Height).Select(n => Color.White).ToArray());
+
+            //População de no mmínimo 50 e máximo 70 indivíduos
+            var population = new Population(50, 70, new CromossomoViajante(problema.Mapa.Locais.Count));
+            var fitness = new FitnessViajante(problema);
+
+            ga = new GeneticAlgorithm(population, fitness, new EliteSelection(), new OrderedCrossover(), new ReverseSequenceMutation())
+            {
+                CrossoverProbability = 0.75f,
+                MutationProbability = 0.10f,
+                Termination = new FitnessStagnationTermination(),
+                //Executa com paralelismo
+                TaskExecutor = new GeneticSharp.Infrastructure.Threading.SmartThreadPoolTaskExecutor()
+            };
+
+            //Evento.
+            //O código dentro do bloco delegate{} é executado sempre que uma nova geração é criada pelo algoritmo.
+            ga.GenerationRan += delegate
+            {
+                var chromosome = ga.BestChromosome as CromossomoViajante;
+                //Converte o cromossomo em Solucao.
+                solucao = problema.Solucao(chromosome.GetGenes().Select(g => (int)g.Value).ToList());
+            };
+
+            //Inicia o algoritmo.
+            //Task.Run() faz com que a chamada a Start execute de forma assíncrona, sem bloquear a execução.
+            Task.Run(() =>
+            {
+                ga.Start();
+            });
         }
 
         /// <summary>
@@ -100,19 +138,22 @@ namespace VisitaCidades
                 spriteBatch.Draw(color, local.Posicao, Color.Blue);
             }
 
-            foreach (var rota in solucao.Rotas)
+            if (solucao != null)
             {
-                for (int i = 0; i < rota.Locais.Count - 1; i++)
+                foreach (var rota in solucao.Rotas)
                 {
-                    var atual = rota.Locais[i];
-                    var proximo = rota.Locais[i + 1];
+                    for (int i = 0; i < rota.Locais.Count - 1; i++)
+                    {
+                        var atual = rota.Locais[i];
+                        var proximo = rota.Locais[i + 1];
 
-                    var direcao = proximo.Posicao - atual.Posicao;
-                    var distancia = Vector2.Distance(atual.Posicao, proximo.Posicao);
-                    var angulo = Math.Atan2(direcao.Y, direcao.X);
+                        var direcao = proximo.Posicao - atual.Posicao;
+                        var distancia = Vector2.Distance(atual.Posicao, proximo.Posicao);
+                        var angulo = Math.Atan2(direcao.Y, direcao.X);
 
-                    spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, (float)angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
-                }
+                        spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, (float)angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                    }
+                } 
             }
 
             spriteBatch.End();

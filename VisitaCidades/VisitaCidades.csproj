@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
+    <Compile Include="Model\CromossomoViajante.cs" />
+    <Compile Include="Model\FitnessViajante.cs" />
     <Compile Include="Model\Local.cs" />
     <Compile Include="Model\Mapa.cs" />
     <Compile Include="Model\Problema.cs" />
@@ -76,8 +78,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Genetico\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
