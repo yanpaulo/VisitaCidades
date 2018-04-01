@@ -64,8 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
+    <Compile Include="Model\AlgoritmoBase.cs" />
+    <Compile Include="Model\AlgoritmoFabrica.cs" />
+    <Compile Include="Model\AlgoritmoGenetico.cs" />
     <Compile Include="Model\CromossomoViajante.cs" />
     <Compile Include="Model\FitnessViajante.cs" />
+    <Compile Include="Model\IAlgoritmo.cs" />
     <Compile Include="Model\Local.cs" />
     <Compile Include="Model\Mapa.cs" />
     <Compile Include="Model\Problema.cs" />

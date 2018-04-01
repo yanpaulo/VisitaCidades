@@ -11,6 +11,11 @@ namespace VisitaCidades.Model
 {
     public class Problema
     {
+        public Problema(int tamanho)
+        {
+            Mapa = new Mapa(tamanho);
+        }
+
         public Mapa Mapa { get; set; } = new Mapa();
 
         public List<Viajante> Viajantes { get; set; } = new List<Viajante>

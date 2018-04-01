@@ -22,19 +22,19 @@ namespace VisitaCidades
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Problema problema = new Problema();
-        private Solucao solucao;
+        
         private Texture2D bg;
         private Texture2D color;
-        private GeneticAlgorithm ga;
 
-        public Game1()
+        private IAlgoritmo algoritmo;
+
+        public Game1(IAlgoritmo algoritmo)
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Window.AllowUserResizing = true;
 
-            solucao = problema.SolucaoAleatoria();
+            this.algoritmo = algoritmo;
         }
 
         /// <summary>
@@ -61,40 +61,13 @@ namespace VisitaCidades
 
             // TODO: use this.Content to load your game content here
 
-            bg = new Texture2D(GraphicsDevice, problema.Mapa.Tamanho.Width, problema.Mapa.Tamanho.Height);
+            bg = new Texture2D(GraphicsDevice, algoritmo.Problema.Mapa.Tamanho.Width, algoritmo.Problema.Mapa.Tamanho.Height);
             color = new Texture2D(GraphicsDevice, 10, 10);
 
             bg.SetData(Enumerable.Range(0, bg.Width * bg.Height).Select(n => Color.White).ToArray());
             color.SetData(Enumerable.Range(0, color.Width * color.Height).Select(n => Color.White).ToArray());
 
-            //População de no mmínimo 50 e máximo 70 indivíduos
-            var population = new Population(50, 70, new CromossomoViajante(problema.Mapa.Locais.Count));
-            var fitness = new FitnessViajante(problema);
-
-            ga = new GeneticAlgorithm(population, fitness, new EliteSelection(), new OrderedCrossover(), new ReverseSequenceMutation())
-            {
-                CrossoverProbability = 0.75f,
-                MutationProbability = 0.10f,
-                Termination = new FitnessStagnationTermination(),
-                //Executa com paralelismo
-                TaskExecutor = new GeneticSharp.Infrastructure.Threading.SmartThreadPoolTaskExecutor()
-            };
-
-            //Evento.
-            //O código dentro do bloco delegate{} é executado sempre que uma nova geração é criada pelo algoritmo.
-            ga.GenerationRan += delegate
-            {
-                var chromosome = ga.BestChromosome as CromossomoViajante;
-                //Converte o cromossomo em Solucao.
-                solucao = problema.Solucao(chromosome.GetGenes().Select(g => (int)g.Value).ToList());
-            };
-
-            //Inicia o algoritmo.
-            //Task.Run() faz com que a chamada a Start execute de forma assíncrona, sem bloquear a execução.
-            Task.Run(() =>
-            {
-                ga.Start();
-            });
+            algoritmo.ExecutaAsync();
         }
 
         /// <summary>
@@ -130,17 +103,17 @@ namespace VisitaCidades
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             
-            spriteBatch.Draw(bg, problema.Mapa.Tamanho, Color.White);
+            spriteBatch.Draw(bg, algoritmo.Problema.Mapa.Tamanho, Color.White);
 
 
-            foreach (var local in problema.Mapa.Locais)
+            foreach (var local in algoritmo.Problema.Mapa.Locais)
             {
                 spriteBatch.Draw(color, local.Posicao, Color.Blue);
             }
 
-            if (solucao != null)
+            if (algoritmo.Solucao != null)
             {
-                foreach (var rota in solucao.Rotas)
+                foreach (var rota in algoritmo.Solucao.Rotas)
                 {
                     for (int i = 0; i < rota.Locais.Count - 1; i++)
                     {
