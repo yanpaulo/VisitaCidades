@@ -9,8 +9,8 @@
     <ProjectGuid>{D65499FF-C91F-42AF-A7E2-BAA2DA5D7ED3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VisitaCidades</RootNamespace>
-    <AssemblyName>VisitaCidades</AssemblyName>
+    <RootNamespace>VisitaCidades.Desktop</RootNamespace>
+    <AssemblyName>visita</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
