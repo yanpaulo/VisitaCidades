@@ -13,8 +13,8 @@ namespace VisitaCidades.Model
     {
         public Problema(int tamanho, int[] tamanhoRotas)
         {
-            var nomes = new[] { "Maria", "Sebastiao", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake" };
-            var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Connor", "Nanomachines" };
+            var nomes = new[] { "Maria", "Sebastiao", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake", "John Connor" };
+            var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Connor", "Nanomachines", "Pereira" };
 
             var cores = new Queue<Color>(new[] { Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Purple, Color.Brown, Color.Orange, Color.Gray });
 
