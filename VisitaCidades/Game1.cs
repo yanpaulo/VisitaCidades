@@ -22,7 +22,7 @@ namespace VisitaCidades
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+        private SpriteFont font;
         private Texture2D bg;
         private Texture2D color;
 
@@ -60,6 +60,7 @@ namespace VisitaCidades
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            font = Content.Load<SpriteFont>("MainFont");
 
             bg = new Texture2D(GraphicsDevice, algoritmo.Problema.Mapa.Tamanho.Width, algoritmo.Problema.Mapa.Tamanho.Height);
             color = new Texture2D(GraphicsDevice, 10, 10);
@@ -108,6 +109,7 @@ namespace VisitaCidades
 
             foreach (var local in algoritmo.Problema.Mapa.Locais)
             {
+                spriteBatch.DrawString(font, local.Nome, local.Posicao + new Vector2(0, -20), Color.Gray);
                 spriteBatch.Draw(color, local.Posicao, Color.Blue);
             }
 
@@ -115,6 +117,8 @@ namespace VisitaCidades
             {
                 foreach (var rota in algoritmo.Solucao.Rotas)
                 {
+                    spriteBatch.DrawString(font, rota.Viajante.Nome, rota.Locais.First().Posicao - new Vector2(-10, 0), Color.Black);
+
                     for (int i = 0; i < rota.Locais.Count - 1; i++)
                     {
                         var atual = rota.Locais[i];
@@ -126,6 +130,8 @@ namespace VisitaCidades
 
                         spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, (float)angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
                     }
+
+                    //spriteBatch.DrawString(SpriteF)
                 } 
             }
 

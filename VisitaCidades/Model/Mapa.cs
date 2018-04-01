@@ -12,7 +12,7 @@ namespace VisitaCidades.Model
         {
             Locais = Enumerable
                 .Range(0, quantidadeLocais)
-                .Select(n => new Local(('A' + n).ToString(), new Vector2(Rand.Next(640), Rand.Next(480))))
+                .Select(n => new Local('A' + n <= 'Z' ? ((char)('A' + n)).ToString() : n.ToString(), new Vector2(Rand.Next(640), Rand.Next(480))))
                 .ToList();
         }
 
