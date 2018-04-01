@@ -22,7 +22,8 @@ namespace VisitaCidades
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private SpriteFont font;
+        private SpriteFont mainFont;
+        private SpriteFont captionFont;
         private Texture2D bg;
         private Texture2D color;
 
@@ -34,6 +35,7 @@ namespace VisitaCidades
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            IsMouseVisible = true;
             //Window.AllowUserResizing = true;
 
             this.algoritmo = algoritmo;
@@ -62,7 +64,8 @@ namespace VisitaCidades
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            font = Content.Load<SpriteFont>("MainFont");
+            mainFont = Content.Load<SpriteFont>("Font/Main");
+            captionFont = Content.Load<SpriteFont>("Font/Caption");
 
             bg = new Texture2D(GraphicsDevice, algoritmo.Problema.Mapa.Tamanho.Width, algoritmo.Problema.Mapa.Tamanho.Height);
             color = new Texture2D(GraphicsDevice, 10, 10);
@@ -103,15 +106,24 @@ namespace VisitaCidades
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            var mousePosition = Mouse.GetState().Position.ToVector2();
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            
+
             spriteBatch.Draw(bg, algoritmo.Problema.Mapa.Tamanho, Color.White);
 
 
             foreach (var local in algoritmo.Problema.Mapa.Locais)
             {
-                spriteBatch.DrawString(font, local.Nome, local.Posicao + new Vector2(0, -20), Color.Gray);
+                if (Vector2.Distance(local.Posicao, mousePosition) < 50)
+                {
+                    spriteBatch.DrawString(captionFont, $"{local.Nome}{local.Posicao}", local.Posicao + new Vector2(0, -40), Color.Black);
+                }
+                else
+                {
+                    spriteBatch.DrawString(captionFont, local.Nome, local.Posicao + new Vector2(0, -20), Color.Gray);
+                }
                 spriteBatch.Draw(color, local.Posicao, Color.Blue);
             }
 
@@ -119,7 +131,7 @@ namespace VisitaCidades
             {
                 foreach (var rota in algoritmo.Solucao.Rotas)
                 {
-                    spriteBatch.DrawString(font, rota.Viajante.Nome, rota.Locais.First().Posicao - new Vector2(-10, 0), Color.Black);
+                    spriteBatch.DrawString(captionFont, rota.Viajante.Nome, rota.Locais.First().Posicao - new Vector2(-10, 0), Color.Black);
 
                     for (int i = 0; i < rota.Locais.Count - 1; i++)
                     {
@@ -128,13 +140,17 @@ namespace VisitaCidades
 
                         var direcao = proximo.Posicao - atual.Posicao;
                         var distancia = Vector2.Distance(atual.Posicao, proximo.Posicao);
-                        var angulo = Math.Atan2(direcao.Y, direcao.X);
+                        var angulo = (float)Math.Atan2(direcao.Y, direcao.X);
 
-                        spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, (float)angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                        if (Vector2.Distance(atual.Posicao + Vector2.Multiply(direcao, 0.5f), mousePosition) < 200)
+                        {
+                            spriteBatch.DrawString(mainFont, distancia.ToString("N"), atual.Posicao + Vector2.Multiply(direcao, 0.5f), Color.DarkGray, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                        }
+                        spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
                     }
 
                     //spriteBatch.DrawString(SpriteF)
-                } 
+                }
             }
 
             spriteBatch.End();
