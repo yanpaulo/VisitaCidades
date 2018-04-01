@@ -14,16 +14,11 @@ namespace VisitaCidades.Model
 {
     public class AlgoritmoFabrica
     {
-        public static IAlgoritmo CreateAlgoritmo(string[] args)
-        {
-            return Run(args);
-        }
-
-        private static IAlgoritmo Run(string[] args)
+        public static IAlgoritmo Create(string[] args)
         {
             var dict = new Dictionary<string, string[]>();
             var flat = new List<string>();
-
+            
             for (int i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
@@ -51,10 +46,9 @@ namespace VisitaCidades.Model
                 case "g":
                     return CriaAlgoritmoGenetico(dict, flat);
                 default:
-                    break;
+                    throw new ArgumentException("Algoritmo invalido.");
             }
 
-            throw new NotImplementedException();
         }
 
         private static IAlgoritmo CriaAlgoritmoGenetico(Dictionary<string, string[]> dict, List<string> flat)
@@ -201,6 +195,48 @@ namespace VisitaCidades.Model
 
 
             return new AlgoritmoGenetico(problema, population, selection, crossover, crossoverProbability, mutation, mutationProbability, termination);
+        }
+
+        public static void DisplayHelp()
+        {
+            var text = @"
+VisitaCidades
+Uso:    visita.exe [-a algoritmo] [opcoes do algoritmo]
+Onde:
+    algoritmo: g (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
+
+Opcoes por algoritmo:
+----------------------------------------------------------------------------------------
+    g:
+        -p [min=5],[max=50]: Tamanho minimo e/ou maximo da populacao
+        -s [selection]: Selecao
+            e*: EliteSelection
+            r: RouletteWheelSelection
+            s: StochasticUniversalSamplingSelection
+            t: TournamentSelection
+        -c [crossover]: Crossover.
+            o*: OrderedCrossover
+            u: UniformCrossover
+            Mais opcoes no codigo.
+        -m [mutacao]: Mutacao.
+            r*: ReverseSequenceMutation
+            d: DisplacementMutation
+            Mais opcoes no codigo.
+        -t [termination]: Condicao de parada
+            s: FitnessStagnationTermination
+            t: FitnessThresholdTermination
+            g: GenerationNumberTermination
+        -cp [crossover-probability=0,75]: Probabilidade de crossover.
+        -cp [mutation-probability=0,25]: Probabilidade de crossover.
+----------------------------------------------------------------------------------------
+    hc:
+        NÃO IMPLEMENTADO!!!
+----------------------------------------------------------------------------------------
+    sa:
+        NÃO IMPLEMENTADO!!!
+----------------------------------------------------------------------------------------
+";
+            Console.WriteLine(text);
         }
     }
     

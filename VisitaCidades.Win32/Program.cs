@@ -15,8 +15,7 @@ namespace VisitaCidades.Win32
         [STAThread]
         static void Main(string[] args)
         {
-            using (var game = new Game1(AlgoritmoFabrica.CreateAlgoritmo(args)))
-                game.Run();
+            Bootstrapper.Run(args);
         }
     }
 #endif

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Model\AlgoritmoBase.cs" />
     <Compile Include="Model\AlgoritmoFabrica.cs" />
