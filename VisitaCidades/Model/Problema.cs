@@ -11,19 +11,28 @@ namespace VisitaCidades.Model
 {
     public class Problema
     {
-        public Problema(int tamanho)
+        public Problema(int tamanho, int[] tamanhoRotas)
         {
+            var nomes = new[] { "Maria", "Sebastião", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku" };
+            var sobreNomes = new[] { "João", "Silva", "Freire", "Uzumaki", "Son", "Uchiha" };
+
+            var cores = new Queue<Color>(new[] { Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Purple, Color.Brown, Color.Orange, Color.Gray });
+
             Mapa = new Mapa(tamanho);
+
+            Viajantes = tamanhoRotas.Select(t => new Viajante
+            {
+                QuantidadeLocais = t,
+                Cor = cores.Dequeue(),
+                Nome = $"{nomes.Random()} {sobreNomes.Random()}"
+            })
+            .ToArray();
         }
 
-        public Mapa Mapa { get; set; } = new Mapa();
 
-        public List<Viajante> Viajantes { get; set; } = new List<Viajante>
-        {
-            new Viajante{ QuantidadeLocais = 10, Cor = Color.Red },
-            new Viajante{ QuantidadeLocais = 10, Cor = Color.Blue },
-            new Viajante{ QuantidadeLocais = 10, Cor = Color.Green },
-        };
+        public Mapa Mapa { get; set; }
+
+        public IEnumerable<Viajante> Viajantes { get; set; }
 
         public Solucao SolucaoAleatoria()
         {
@@ -81,7 +90,7 @@ namespace VisitaCidades.Model
 
         }
 
-        public double Custo (IList<int> indexes)
+        public double Custo(IList<int> indexes)
         {
             double custo = 0;
             int count = 0;

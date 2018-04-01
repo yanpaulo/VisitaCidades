@@ -60,6 +60,7 @@ namespace VisitaCidades.Model
         private static IAlgoritmo CriaAlgoritmoGenetico(Dictionary<string, string[]> dict, List<string> flat)
         {
             int tamanho;
+            int[] rotas;
             Problema problema;
 
             int populacaoMin, populacaoMax;
@@ -72,7 +73,17 @@ namespace VisitaCidades.Model
             float crossoverProbability, mutationProbability;
 
             tamanho = dict.IntOrDefault("n", 30).Value;
-            problema = new Problema(tamanho);
+            rotas = dict
+                .ArrayOrDefault("r", new[] { (tamanho / 3).ToString(), (tamanho / 3).ToString(), (tamanho / 3 + tamanho % 3).ToString() })
+                .Select(s => int.Parse(s))
+                .ToArray();
+
+            if (rotas.Sum() != tamanho)
+            {
+                throw new ArgumentException("A soma do tamanho das rotas deve ser igual à quantidade de locais no mapa.");
+            }
+
+            problema = new Problema(tamanho, rotas);
 
             var p = dict.ValueOrDefault("p", "5,50").Split(new[] { ',' });
             if (p.Length != 2 || !int.TryParse(p[0], out populacaoMin) || !int.TryParse(p[1], out populacaoMax))
@@ -81,7 +92,7 @@ namespace VisitaCidades.Model
             }
 
             population = new Population(populacaoMin, populacaoMax, new CromossomoViajante(tamanho));
-            
+
             switch (dict.ValueOrDefault("s", "e"))
             {
                 case "e":
@@ -178,7 +189,7 @@ namespace VisitaCidades.Model
                     throw new ArgumentException("Terminação inválida.");
             }
 
-            if(!float.TryParse(dict.ValueOrDefault("cp", "0,75"), out crossoverProbability))
+            if (!float.TryParse(dict.ValueOrDefault("cp", "0,75"), out crossoverProbability))
             {
                 throw new ArgumentException("Probabilidade de crossover inválida.");
             }
@@ -192,25 +203,5 @@ namespace VisitaCidades.Model
             return new AlgoritmoGenetico(problema, population, selection, crossover, crossoverProbability, mutation, mutationProbability, termination);
         }
     }
-
-    public static class LocalExtensions
-    {
-        public static string ValueOrDefault(this Dictionary<string, string[]> dictionary, string key, string defaultValue = null)
-        {
-            if (dictionary.TryGetValue(key, out string[] value))
-            {
-                return value.SingleOrDefault() ?? defaultValue;
-            }
-            return defaultValue;
-        }
-
-        public static int? IntOrDefault(this Dictionary<string, string[]> dictionary, string key, int? defaultValue = null)
-        {
-            if(int.TryParse(dictionary.ValueOrDefault(key, null), out int n))
-            {
-                return n;
-            }
-            return defaultValue;
-        }
-    }
+    
 }

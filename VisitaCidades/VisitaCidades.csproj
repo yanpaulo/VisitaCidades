@@ -68,6 +68,7 @@
     <Compile Include="Model\AlgoritmoFabrica.cs" />
     <Compile Include="Model\AlgoritmoGenetico.cs" />
     <Compile Include="Model\CromossomoViajante.cs" />
+    <Compile Include="Model\Extensions.cs" />
     <Compile Include="Model\FitnessViajante.cs" />
     <Compile Include="Model\IAlgoritmo.cs" />
     <Compile Include="Model\Local.cs" />
