@@ -32,7 +32,9 @@ namespace VisitaCidades
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Window.AllowUserResizing = true;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+            //Window.AllowUserResizing = true;
 
             this.algoritmo = algoritmo;
         }
