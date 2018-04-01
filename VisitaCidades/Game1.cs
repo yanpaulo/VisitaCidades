@@ -24,6 +24,7 @@ namespace VisitaCidades
         SpriteBatch spriteBatch;
         private SpriteFont mainFont;
         private SpriteFont captionFont;
+        private Texture2D pointer;
         private Texture2D bg;
         private Texture2D color;
 
@@ -34,7 +35,7 @@ namespace VisitaCidades
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferHeight = 600;
             IsMouseVisible = true;
             //Window.AllowUserResizing = true;
 
@@ -66,6 +67,7 @@ namespace VisitaCidades
             // TODO: use this.Content to load your game content here
             mainFont = Content.Load<SpriteFont>("Font/Main");
             captionFont = Content.Load<SpriteFont>("Font/Caption");
+            pointer = Content.Load<Texture2D>("Images/hand-pointer-small");
 
             bg = new Texture2D(GraphicsDevice, algoritmo.Problema.Mapa.Tamanho.Width, algoritmo.Problema.Mapa.Tamanho.Height);
             color = new Texture2D(GraphicsDevice, 10, 10);
@@ -141,10 +143,15 @@ namespace VisitaCidades
                         var direcao = proximo.Posicao - atual.Posicao;
                         var distancia = Vector2.Distance(atual.Posicao, proximo.Posicao);
                         var angulo = (float)Math.Atan2(direcao.Y, direcao.X);
+                        var meio = atual.Posicao + Vector2.Multiply(direcao, 0.5f);
 
-                        if (Vector2.Distance(atual.Posicao + Vector2.Multiply(direcao, 0.5f), mousePosition) < 200)
+                        if (Vector2.Distance(meio, mousePosition) < 200)
                         {
-                            spriteBatch.DrawString(mainFont, distancia.ToString("N"), atual.Posicao + Vector2.Multiply(direcao, 0.5f), Color.DarkGray, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                            spriteBatch.DrawString(mainFont, distancia.ToString("N"), meio + new Vector2(0, 10), Color.DarkGray, 0, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
+                        }
+                        if (Vector2.Distance(atual.Posicao, mousePosition) < 50)
+                        {
+                            spriteBatch.Draw(pointer, atual.Posicao, null, Color.White, angulo, Vector2.Zero, 0.7f, SpriteEffects.FlipHorizontally, 1f);
                         }
                         spriteBatch.Draw(color, atual.Posicao, new Rectangle((int)atual.Posicao.X, (int)atual.Posicao.Y, (int)distancia, 1), rota.Viajante.Cor, angulo, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
                     }
