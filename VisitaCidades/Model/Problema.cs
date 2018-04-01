@@ -76,5 +76,34 @@ namespace VisitaCidades.Model
 
         }
 
+        public double Custo (IList<int> indexes)
+        {
+            double custo = 0;
+            int count = 0;
+            foreach (var viajante in Viajantes)
+            {
+                var items = indexes.Skip(count).Take(viajante.QuantidadeLocais).ToList();
+
+                for (int i = 0; i < items.Count - 1; i++)
+                {
+                    var atual = Mapa.Locais[items[i]];
+                    var proximo = Mapa.Locais[items[i + 1]];
+
+                    custo += Vector2.Distance(atual.Posicao, proximo.Posicao);
+                }
+                count += items.Count;
+            }
+
+            var repetidos = indexes.Count - indexes.Distinct().Count();
+            if (repetidos > 0)
+            {
+                custo *= repetidos;
+            }
+
+            custo *= Vector2.Distance(Mapa.Locais[indexes.First()].Posicao, Mapa.Locais[indexes.Last()].Posicao);
+
+            return custo;
+        }
+
     }
 }
