@@ -221,9 +221,15 @@ namespace VisitaCidades
         {
             var text = @"
 VisitaCidades
-Uso:    visita.exe [-a algoritmo] [opcoes do algoritmo]
+Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [opcoes do algoritmo]
 Onde:
-    algoritmo: g (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
+    algoritmo:
+        g (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
+    numero-locais: 
+        Quantidade de pontos no mapa (padrão: 30)
+    rotas:
+        Quantidade de locais por rotas. (padrão: 3 rotas com distribuição proporcional)
+        Exemplo: -r 8 12 10 cria 3 rotas, sendo uma de 8, uma de 12 e outra de 10 caminhos.
 
 Opcoes por algoritmo:
 ----------------------------------------------------------------------------------------
