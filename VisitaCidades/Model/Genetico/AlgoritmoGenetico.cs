@@ -8,6 +8,7 @@ using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Infrastructure.Threading;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,9 +39,16 @@ namespace VisitaCidades.Model.Genetico
             Solucao = Problema.Solucao(list);
         }
 
-        public override void Executa()
+        protected override void Roda()
         {
             ga.Start();
         }
+
+        public override string ToString() =>
+            $"Populacao: {ga.Population.MinSize}-{ga.Population.MaxSize}\n" +
+            $"Selecao: {ga.Selection.GetType().GetDisplayName()}\n" +
+            $"Crossover: {ga.Crossover.GetType().GetDisplayName()}\n" +
+            $"Mutation: {ga.Mutation.GetType().GetDisplayName()}\n" +
+            $"Termination: {ga.Termination.GetType().GetDisplayName()}\n";
     }
 }

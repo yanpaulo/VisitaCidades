@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,5 +38,8 @@ namespace VisitaCidades.Model
             }
             return defaultValue;
         }
+
+        public static string GetDisplayName(this Type type) =>
+            (type.GetCustomAttributes(typeof(DisplayNameAttribute), false).FirstOrDefault() as DisplayNameAttribute)?.DisplayName ?? type.Name;
     }
 }
