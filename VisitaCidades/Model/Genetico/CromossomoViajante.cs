@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using static VisitaCidades.Utils;
 
-namespace VisitaCidades.Model
+namespace VisitaCidades.Model.Genetico
 {
     public class CromossomoViajante : ChromosomeBase
     {

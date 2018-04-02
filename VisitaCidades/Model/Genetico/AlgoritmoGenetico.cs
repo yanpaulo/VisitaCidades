@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VisitaCidades.Model
+namespace VisitaCidades.Model.Genetico
 {
     public class AlgoritmoGenetico : AlgoritmoBase
     {
