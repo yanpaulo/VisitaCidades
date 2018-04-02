@@ -23,7 +23,7 @@ namespace VisitaCidades.Model
         public void Executa()
         {
             var sw = new Stopwatch();
-            Console.WriteLine("Informacoes do Algoritmo:");
+            Console.WriteLine("Informacoes do Algoritmo");
             Console.WriteLine(this);
 
             sw.Start();
