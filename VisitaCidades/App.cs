@@ -1,5 +1,4 @@
-﻿using GeneticSharp.Domain;
-using GeneticSharp.Domain.Crossovers;
+﻿using GeneticSharp.Domain.Crossovers;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Populations;
 using GeneticSharp.Domain.Selections;
@@ -9,17 +8,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VisitaCidades.Model;
 using VisitaCidades.Model.Genetico;
 
-namespace VisitaCidades.Model
+namespace VisitaCidades
 {
-    public class AlgoritmoFabrica
+    public class App
     {
-        public static IAlgoritmo Create(string[] args)
+        public static void Run(string[] args)
+        {
+            if (args.Any(a => a.Contains("?") || a.ToLower().Contains("help")))
+            {
+                DisplayHelp();
+                return;
+            }
+
+            try
+            {
+                using (var game = new Game1(Create(args)))
+                    game.Run();
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static IAlgoritmo Create(string[] args)
         {
             var dict = new Dictionary<string, string[]>();
             var flat = new List<string>();
-            
+
             for (int i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
@@ -198,7 +217,7 @@ namespace VisitaCidades.Model
             return new AlgoritmoGenetico(problema, population, selection, crossover, crossoverProbability, mutation, mutationProbability, termination);
         }
 
-        public static void DisplayHelp()
+        private static void DisplayHelp()
         {
             var text = @"
 VisitaCidades
@@ -239,6 +258,7 @@ Opcoes por algoritmo:
 ";
             Console.WriteLine(text);
         }
+
+
     }
-    
 }

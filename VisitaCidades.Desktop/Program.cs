@@ -14,7 +14,7 @@ namespace VisitaCidades
         [STAThread]
         static void Main(string[] args)
         {
-            Bootstrapper.Run(args);
+            App.Run(args);
         }
     }
 }
