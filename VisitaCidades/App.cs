@@ -237,15 +237,17 @@ Opcoes por algoritmo:
         -p [min=5],[max=50]: Tamanho minimo e/ou maximo da populacao
         -s [selection]: Selecao
             e*: EliteSelection
+            t: TournamentSelection
             r: RouletteWheelSelection
             s: StochasticUniversalSamplingSelection
-            t: TournamentSelection
         -c [crossover]: Crossover.
             o*: OrderedCrossover
+            ob: OrderBasedCrossover
             u: UniformCrossover
             Mais opcoes no codigo.
         -m [mutacao]: Mutacao.
             r*: ReverseSequenceMutation
+            s: PartialShuffleMutation
             d: DisplacementMutation
             Mais opcoes no codigo.
         -t [termination]: Condicao de parada
