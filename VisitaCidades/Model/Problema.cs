@@ -11,7 +11,9 @@ namespace VisitaCidades.Model
 {
     public class Problema
     {
-        public Problema(int tamanho, int[] tamanhoRotas)
+        private double pesoProximidade;
+
+        public Problema(int tamanho, int[] tamanhoRotas, double pesoProximidade)
         {
             var nomes = new[] { "Maria", "Sebastiao", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake", "John Connor" };
             var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Nanomachines", "Pereira" };
@@ -27,6 +29,8 @@ namespace VisitaCidades.Model
                 Nome = $"{nomes.Random()} {sobreNomes.Random()}"
             })
             .ToArray();
+
+            this.pesoProximidade = pesoProximidade;
         }
 
 
@@ -70,6 +74,11 @@ namespace VisitaCidades.Model
                     Locais = indexes.Skip(locaisCount).Take(viajante.QuantidadeLocais).Select(index => Mapa.Locais[index]).ToList()
                 };
 
+                if (rotas.Any())
+                {
+                    rota.Locais.Insert(0, rotas.Last().Locais.Last());
+                } 
+
                 for (int i = 0; i < rota.Locais.Count - 1; i++)
                 {
                     var atual = rota.Locais[i];
@@ -92,6 +101,7 @@ namespace VisitaCidades.Model
 
         public double Custo(IList<int> indexes)
         {
+            double distanciaEntreRotas = 0;
             double custo = 0;
             int count = 0;
             foreach (var viajante in Viajantes)
@@ -106,15 +116,22 @@ namespace VisitaCidades.Model
                     custo += Vector2.Distance(atual.Posicao, proximo.Posicao);
                 }
                 count += items.Count;
+
+                var fimAtual = items.Last();
+                var inicioProximo = indexes[count % indexes.Count];
+
+                distanciaEntreRotas += Vector2.Distance(Mapa.Locais[fimAtual].Posicao, Mapa.Locais[inicioProximo].Posicao);
+
+
             }
+            custo += pesoProximidade * distanciaEntreRotas;
 
             var repetidos = indexes.Count - indexes.Distinct().Count();
             if (repetidos > 0)
             {
-                custo *= repetidos;
+                custo *= Math.Pow(2, repetidos);
             }
 
-            custo *= Vector2.Distance(Mapa.Locais[indexes.First()].Posicao, Mapa.Locais[indexes.Last()].Posicao);
 
             return custo;
         }

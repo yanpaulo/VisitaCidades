@@ -39,6 +39,15 @@ namespace VisitaCidades.Model
             return defaultValue;
         }
 
+        public static double? DoubleOrDefault(this Dictionary<string, string[]> dictionary, string key, double? defaultValue = null)
+        {
+            if (double.TryParse(dictionary.ValueOrDefault(key, null), out double n))
+            {
+                return n;
+            }
+            return defaultValue;
+        }
+
         public static string GetDisplayName(this Type type) =>
             (type.GetCustomAttributes(typeof(DisplayNameAttribute), false).FirstOrDefault() as DisplayNameAttribute)?.DisplayName ?? type.Name;
     }

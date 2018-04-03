@@ -75,6 +75,7 @@ namespace VisitaCidades
         {
             int tamanho;
             int[] rotas;
+            double pesoProximidade;
             Problema problema;
 
             int populacaoMin, populacaoMax;
@@ -97,7 +98,9 @@ namespace VisitaCidades
                 throw new ArgumentException("A soma do tamanho das rotas deve ser igual à quantidade de locais no mapa.");
             }
 
-            problema = new Problema(tamanho, rotas);
+            pesoProximidade = dict.DoubleOrDefault("pr", 1.5).Value;
+
+            problema = new Problema(tamanho, rotas, pesoProximidade);
 
             var p = dict.ValueOrDefault("p", "5,50").Split(new[] { ',' });
             if (p.Length != 2 || !int.TryParse(p[0], out populacaoMin) || !int.TryParse(p[1], out populacaoMax))
@@ -221,7 +224,7 @@ namespace VisitaCidades
         {
             var text = @"
 VisitaCidades
-Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [opcoes do algoritmo]
+Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [-pr peso-proximidade=1,5] [opcoes do algoritmo]
 Onde:
     algoritmo:
         g (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
@@ -230,6 +233,8 @@ Onde:
     rotas:
         Quantidade de locais por rotas. (padrão: 3 rotas com distribuição proporcional)
         Exemplo: -r 8 12 10 cria 3 rotas, sendo uma de 8, uma de 12 e outra de 10 caminhos.
+    peso-proximidade: 
+        A prioridade que a proximidade entre sub-rotas tomará no algoritmo.
 
 Opcoes por algoritmo:
 ----------------------------------------------------------------------------------------
