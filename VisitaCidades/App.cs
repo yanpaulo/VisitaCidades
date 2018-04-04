@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VisitaCidades.Model;
 using VisitaCidades.Model.Genetico;
+using VisitaCidades.Model.HillClimbing;
 
 namespace VisitaCidades
 {
@@ -60,34 +61,14 @@ namespace VisitaCidades
                 }
             }
 
-            var a = dict.ValueOrDefault("a", "g");
-            switch (a)
-            {
-                case "g":
-                    return CriaAlgoritmoGenetico(dict, flat);
-                default:
-                    throw new ArgumentException("Algoritmo invalido.");
-            }
+            Problema problema;
 
-        }
-
-        private static IAlgoritmo CriaAlgoritmoGenetico(Dictionary<string, string[]> dict, List<string> flat)
-        {
             int tamanho;
             int[] rotas;
             double pesoProximidade;
-            Problema problema;
-
-            int populacaoMin, populacaoMax;
-            IPopulation population;
-
-            ISelection selection;
-            ICrossover crossover;
-            IMutation mutation;
-            ITermination termination;
-            float crossoverProbability, mutationProbability;
 
             tamanho = dict.IntOrDefault("n", 30).Value;
+            pesoProximidade = dict.DoubleOrDefault("pr", 1.5).Value;
             rotas = dict
                 .ArrayOrDefault("r", new[] { (tamanho / 3).ToString(), (tamanho / 3).ToString(), (tamanho / 3 + tamanho % 3).ToString() })
                 .Select(s => int.Parse(s))
@@ -98,9 +79,54 @@ namespace VisitaCidades
                 throw new ArgumentException("A soma do tamanho das rotas deve ser igual à quantidade de locais no mapa.");
             }
 
-            pesoProximidade = dict.DoubleOrDefault("pr", 1.5).Value;
-
             problema = new Problema(tamanho, rotas, pesoProximidade);
+
+            var a = dict.ValueOrDefault("a", "g");
+
+            
+
+            switch (a)
+            {
+                case "g":
+                    return CriaAlgoritmoGenetico(dict, flat, problema);
+                case "hc":
+                    return CriaAlgoritmoHillClimbing(dict, flat, problema);
+                default:
+                    throw new ArgumentException("Algoritmo invalido.");
+            }
+
+        }
+
+        private static IAlgoritmo CriaAlgoritmoHillClimbing(Dictionary<string, string[]> dict, List<string> flat, Problema problema)
+        {
+            var iteracoes = dict.IntOrDefault("i", 1000);
+            if (iteracoes == null)
+            {
+                throw new ArgumentException("Especificador de iteracoes invalido!!!");
+            }
+            var stagnacao = dict.IntOrDefault("s", 100);
+            if (stagnacao == null)
+            {
+                throw new ArgumentException("Especificador de stagnacao invalido!!!");
+            }
+            return new AlgoritmoHillClimbing(problema, iteracoes.Value, stagnacao.Value);
+        }
+
+        private static IAlgoritmo CriaAlgoritmoGenetico(Dictionary<string, string[]> dict, List<string> flat, Problema problema)
+        {
+            
+            int populacaoMin, populacaoMax;
+            IPopulation population;
+
+            ISelection selection;
+            ICrossover crossover;
+            IMutation mutation;
+            ITermination termination;
+            float crossoverProbability, mutationProbability;
+
+            
+
+            
 
             var p = dict.ValueOrDefault("p", "5,50").Split(new[] { ',' });
             if (p.Length != 2 || !int.TryParse(p[0], out populacaoMin) || !int.TryParse(p[1], out populacaoMax))
@@ -108,7 +134,7 @@ namespace VisitaCidades
                 throw new ArgumentException("Faixa de população inválida.");
             }
 
-            population = new Population(populacaoMin, populacaoMax, new CromossomoViajante(tamanho));
+            population = new Population(populacaoMin, populacaoMax, new CromossomoViajante(problema.Mapa.Locais.Count));
 
             switch (dict.ValueOrDefault("s", "e"))
             {
@@ -263,7 +289,8 @@ Opcoes por algoritmo:
         -cp [mutation-probability=0,25]: Probabilidade de crossover.
 ----------------------------------------------------------------------------------------
     hc:
-        NÃO IMPLEMENTADO!!!
+        -i [iteracoes=1000]: Quantidade de iteracoes.
+        -s [iteracoes=100]: Contador de estagnacao.
 ----------------------------------------------------------------------------------------
     sa:
         NÃO IMPLEMENTADO!!!

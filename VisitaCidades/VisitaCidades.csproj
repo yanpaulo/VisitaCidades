@@ -70,6 +70,7 @@
     <Compile Include="Model\Genetico\CromossomoViajante.cs" />
     <Compile Include="Model\Extensions.cs" />
     <Compile Include="Model\Genetico\FitnessViajante.cs" />
+    <Compile Include="Model\HillClimbing\AlgoritmoHillClimbing.cs" />
     <Compile Include="Model\IAlgoritmo.cs" />
     <Compile Include="Model\Local.cs" />
     <Compile Include="Model\Mapa.cs" />
