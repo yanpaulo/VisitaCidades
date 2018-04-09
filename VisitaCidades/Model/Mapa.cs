@@ -9,13 +9,7 @@ namespace VisitaCidades.Model
 {
     public class Mapa
     {
-        public Mapa(int quantidadeLocais = 30)
-        {
-            
-
-
-
-        }
+        private Mapa() { }
 
         public static Mapa Random(int quantidadeLocais = 30)
         {
