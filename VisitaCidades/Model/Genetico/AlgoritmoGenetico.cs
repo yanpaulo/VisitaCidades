@@ -46,9 +46,10 @@ namespace VisitaCidades.Model.Genetico
 
         public override string ToString() =>
             $"Populacao: {ga.Population.MinSize}-{ga.Population.MaxSize}\n" +
-            $"Selecao: {ga.Selection.GetType().GetDisplayName()}\n" +
+            $"Selecao: { (ga.Selection.GetType() == typeof(EliteSelection) ? @"Truncation" : ga.Crossover.GetType().GetDisplayName()) }\n" +
             $"Crossover: {ga.Crossover.GetType().GetDisplayName()}\n" +
             $"Mutation: {ga.Mutation.GetType().GetDisplayName()}\n" +
+            $"Reinsertion: {ga.Reinsertion.GetType().GetDisplayName()}\n" +
             $"Termination: {ga.Termination.GetType().GetDisplayName()}\n";
     }
 }
