@@ -150,7 +150,7 @@ namespace VisitaCidades
 
             population = new Population(populacaoMin, populacaoMax, new CromossomoViajante(problema.Mapa.Locais.Count));
 
-            switch (dict.ValueOrDefault("s", "e"))
+            switch (dict.ValueOrDefault("s", "t"))
             {
                 case "e":
                     selection = new EliteSelection();
@@ -298,8 +298,8 @@ Opcoes por algoritmo:
     g:
         -p [min=50],[max=100]: Tamanho minimo e/ou maximo da populacao
         -s [selection]: Selecao
-            e*: Truncation Selection
-            t: Tournament Selection
+            t*: Tournament Selection
+            e: Truncation Selection
             r: Roulette Wheel Selection
             s: Stochastic Universal Sampling Selection
         -c [crossover]: Crossover.
@@ -318,7 +318,7 @@ Opcoes por algoritmo:
             p: Pure Reinsertion
             Mais opcoes no codigo.
         -t [termination]: Condicao de parada
-            s: Fitness Stagnation Termination
+            s*: Fitness Stagnation Termination
             t: Fitness Threshold Termination
             g: Generation Number Termination
         -cp [crossover-probability=0,75]: Probabilidade de crossover.
