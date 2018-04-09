@@ -68,7 +68,7 @@ namespace VisitaCidades
             double pesoProximidade;
 
             tamanho = dict.IntOrDefault("n", 30).Value;
-            pesoProximidade = dict.DoubleOrDefault("pr", 1.5).Value;
+            pesoProximidade = dict.DoubleOrDefault("pr", 1.0).Value;
             rotas = dict
                 .ArrayOrDefault("r", new[] { (tamanho / 3).ToString(), (tamanho / 3).ToString(), (tamanho / 3 + tamanho % 3).ToString() })
                 .Select(s => int.Parse(s))
@@ -79,7 +79,7 @@ namespace VisitaCidades
                 throw new ArgumentException("A soma do tamanho das rotas deve ser igual à quantidade de locais no mapa.");
             }
 
-            switch (dict.ValueOrDefault("m", "e"))
+            switch (dict.ValueOrDefault("f", "e"))
             {
                 case "e":
                     mapa = Mapa.Elipse(tamanho);
@@ -140,7 +140,7 @@ namespace VisitaCidades
 
             
 
-            var p = dict.ValueOrDefault("p", "5,50").Split(new[] { ',' });
+            var p = dict.ValueOrDefault("p", "50,100").Split(new[] { ',' });
             if (p.Length != 2 || !int.TryParse(p[0], out populacaoMin) || !int.TryParse(p[1], out populacaoMax))
             {
                 throw new ArgumentException("Faixa de população inválida.");
@@ -262,7 +262,7 @@ namespace VisitaCidades
         {
             var text = @"
 VisitaCidades
-Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [-m formato-mapa] [-pr peso-proximidade=1,5] [opcoes do algoritmo]
+Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [-f formato-mapa] [-pr peso-proximidade=1,0] [opcoes do algoritmo]
 Onde:
     algoritmo:
         g* (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
@@ -279,12 +279,12 @@ Onde:
 Opcoes por algoritmo:
 ----------------------------------------------------------------------------------------
     g:
-        -p [min=5],[max=50]: Tamanho minimo e/ou maximo da populacao
+        -p [min=50],[max=100]: Tamanho minimo e/ou maximo da populacao
         -s [selection]: Selecao
-            e*: EliteSelection
-            t: TournamentSelection
-            r: RouletteWheelSelection
-            s: StochasticUniversalSamplingSelection
+            e*: Elite Selection
+            t: Tournament Selection
+            r: Roulette Wheel Selection
+            s: Stochastic Universal Sampling Selection
         -c [crossover]: Crossover.
             o*: OrderedCrossover
             ob: OrderBasedCrossover
