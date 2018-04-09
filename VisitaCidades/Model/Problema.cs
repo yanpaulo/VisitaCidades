@@ -13,14 +13,14 @@ namespace VisitaCidades.Model
     {
         private double pesoProximidade;
 
-        public Problema(int tamanho, int[] tamanhoRotas, double pesoProximidade)
+        public Problema(Mapa mapa, int[] tamanhoRotas, double pesoProximidade)
         {
             var nomes = new[] { "Maria", "Sebastiao", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake", "John Connor" };
             var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Nanomachines", "Pereira" };
 
             var cores = new Queue<Color>(new[] { Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Purple, Color.Brown, Color.Orange, Color.Gray });
 
-            Mapa = new Mapa(tamanho);
+            Mapa = mapa;
 
             Viajantes = tamanhoRotas.Select(t => new Viajante
             {

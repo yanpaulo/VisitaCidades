@@ -60,7 +60,7 @@ namespace VisitaCidades
                     flat.Add(arg);
                 }
             }
-
+            Mapa mapa;
             Problema problema;
 
             int tamanho;
@@ -79,7 +79,19 @@ namespace VisitaCidades
                 throw new ArgumentException("A soma do tamanho das rotas deve ser igual à quantidade de locais no mapa.");
             }
 
-            problema = new Problema(tamanho, rotas, pesoProximidade);
+            switch (dict.ValueOrDefault("m", "e"))
+            {
+                case "e":
+                    mapa = Mapa.Elipse(tamanho);
+                    break;
+                case "a":
+                    mapa = Mapa.Random(tamanho);
+                    break;
+                default:
+                    throw new ArgumentException("Formato de mapa invalido.");
+            }
+
+            problema = new Problema(mapa, rotas, pesoProximidade);
 
             var a = dict.ValueOrDefault("a", "g");
 
@@ -250,15 +262,17 @@ namespace VisitaCidades
         {
             var text = @"
 VisitaCidades
-Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [-pr peso-proximidade=1,5] [opcoes do algoritmo]
+Uso:    visita.exe [-a algoritmo] [-n numero-locais=30] [-r rotas] [-m formato-mapa] [-pr peso-proximidade=1,5] [opcoes do algoritmo]
 Onde:
     algoritmo:
-        g (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
+        g* (Genetico), hc (Hill Climbing), sa (Simulated Arealing)
     numero-locais: 
         Quantidade de pontos no mapa (padrão: 30)
     rotas:
         Quantidade de locais por rotas. (padrão: 3 rotas com distribuição proporcional)
         Exemplo: -r 8 12 10 cria 3 rotas, sendo uma de 8, uma de 12 e outra de 10 caminhos.
+    formato-mapa:
+        e* (Elipsoide), a (Aleatorio)
     peso-proximidade: 
         A prioridade que a proximidade entre sub-rotas tomará no algoritmo.
 
