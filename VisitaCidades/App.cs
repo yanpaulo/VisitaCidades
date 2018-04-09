@@ -1,6 +1,7 @@
 ﻿using GeneticSharp.Domain.Crossovers;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Populations;
+using GeneticSharp.Domain.Reinsertions;
 using GeneticSharp.Domain.Selections;
 using GeneticSharp.Domain.Terminations;
 using System;
@@ -134,6 +135,7 @@ namespace VisitaCidades
             ICrossover crossover;
             IMutation mutation;
             ITermination termination;
+            IReinsertion reinsertion;
             float crossoverProbability, mutationProbability;
 
             
@@ -244,6 +246,21 @@ namespace VisitaCidades
                     throw new ArgumentException("Terminação inválida.");
             }
 
+            switch (dict.ValueOrDefault("e", "e"))
+            {
+                case "e":
+                    reinsertion = new ElitistReinsertion();
+                    break;
+                case "p":
+                    reinsertion = new PureReinsertion();
+                    break;
+                case "u":
+                    reinsertion = new UniformReinsertion();
+                    break;
+                default:
+                    throw new ArgumentException("Reinserção inválida.");
+            }
+
             if (!float.TryParse(dict.ValueOrDefault("cp", "0,75"), out crossoverProbability))
             {
                 throw new ArgumentException("Probabilidade de crossover inválida.");
@@ -255,7 +272,7 @@ namespace VisitaCidades
             }
 
 
-            return new AlgoritmoGenetico(problema, population, selection, crossover, crossoverProbability, mutation, mutationProbability, termination);
+            return new AlgoritmoGenetico(problema, population, selection, crossover, crossoverProbability, mutation, mutationProbability, termination, reinsertion);
         }
 
         private static void DisplayHelp()
@@ -281,24 +298,29 @@ Opcoes por algoritmo:
     g:
         -p [min=50],[max=100]: Tamanho minimo e/ou maximo da populacao
         -s [selection]: Selecao
-            e*: Elite Selection
+            e*: Truncation Selection
             t: Tournament Selection
             r: Roulette Wheel Selection
             s: Stochastic Universal Sampling Selection
         -c [crossover]: Crossover.
-            o*: OrderedCrossover
-            ob: OrderBasedCrossover
-            u: UniformCrossover
+            o*: Ordered Crossover
+            ob: Order Based Crossover
+            u: Uniform Crossover
             Mais opcoes no codigo.
         -m [mutacao]: Mutacao.
-            r*: ReverseSequenceMutation
-            s: PartialShuffleMutation
-            d: DisplacementMutation
+            r*: Reverse Sequence Mutation
+            s: Partial Shuffle Mutation
+            d: Displacement Mutation
+            Mais opcoes no codigo.
+        -e [reinsercao]: Reinsercao.
+            e*: Elitist Reinsertion
+            u: Uniform Reinsertion
+            p: Pure Reinsertion
             Mais opcoes no codigo.
         -t [termination]: Condicao de parada
-            s: FitnessStagnationTermination
-            t: FitnessThresholdTermination
-            g: GenerationNumberTermination
+            s: Fitness Stagnation Termination
+            t: Fitness Threshold Termination
+            g: Generation Number Termination
         -cp [crossover-probability=0,75]: Probabilidade de crossover.
         -cp [mutation-probability=0,25]: Probabilidade de crossover.
 ----------------------------------------------------------------------------------------

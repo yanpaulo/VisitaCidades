@@ -3,6 +3,7 @@ using GeneticSharp.Domain.Crossovers;
 using GeneticSharp.Domain.Fitnesses;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Populations;
+using GeneticSharp.Domain.Reinsertions;
 using GeneticSharp.Domain.Selections;
 using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Infrastructure.Threading;
@@ -20,12 +21,13 @@ namespace VisitaCidades.Model.Genetico
         private GeneticAlgorithm ga;
 
         public AlgoritmoGenetico(Problema problema, IPopulation population, ISelection selection, 
-            ICrossover crossover, float crossoverProbability, IMutation mutation, float mutationProbability, ITermination termination) : base(problema)
+            ICrossover crossover, float crossoverProbability, IMutation mutation, float mutationProbability, ITermination termination, IReinsertion reinsertion) : base(problema)
         {
             ga = new GeneticAlgorithm(population, new FitnessViajante(problema), selection, crossover, mutation)
             {
                 CrossoverProbability = crossoverProbability,
                 MutationProbability = mutationProbability,
+                Reinsertion = reinsertion,
                 Termination = termination,
                 TaskExecutor = new SmartThreadPoolTaskExecutor(),
             };
