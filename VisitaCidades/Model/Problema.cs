@@ -15,8 +15,8 @@ namespace VisitaCidades.Model
 
         public Problema(Mapa mapa, int[] tamanhoRotas, double pesoProximidade)
         {
-            var nomes = new[] { "Maria", "Sebastiao", "Brito", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake", "John Connor", "Nanomachines", "Bolsonaro", "Lula", "Fora" };
-            var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Nanomachines", "Pereira", "Mito", "Preso", "Temer" };
+            var nomes = new[] { "Fransquinha", "Sebastiao", "Raquel", "Priscila", "Naruto", "Alucard", "Vegeta", "Goku", "Solid Snake", "John Connor", "Nanomachines", "Bolsonaro", "Lula", "Fora" };
+            var sobreNomes = new[] { "Joao", "Silva", "Freire", "Uzumaki", "Son", "Uchiha", "Nanomachines", "Pereira", "Mito", "Preso", "Temer", "Bolsonaro" };
 
             var cores = new Queue<Color>(new[] { Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Purple, Color.Brown, Color.Orange, Color.Gray });
 
